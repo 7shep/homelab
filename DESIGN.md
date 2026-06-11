@@ -1,24 +1,29 @@
 ---
 name: homelab
-description: Minimal technical observability dashboard for solo developers and self-hosted projects.
+description: Mostly dark developer-console observability dashboard for solo developers and self-hosted projects.
 colors:
-  operational-slate: "#111827"
-  app-canvas: "#F6F7F9"
-  panel: "#FFFFFF"
-  panel-raised: "#F9FAFB"
-  border: "#E5E7EB"
-  divider: "#EEF2F7"
-  muted-copy: "#64748B"
-  nav-copy: "#CBD5E1"
-  signal-mint: "#2DD4BF"
-  signal-mint-soft: "#A7F3D0"
-  success-text: "#166534"
-  success-bg: "#DCFCE7"
-  warning-text: "#92400E"
-  warning-bg: "#FEF3C7"
-  critical-text: "#991B1B"
-  critical-bg: "#FEE2E2"
+  console-bg: "#090D12"
+  sidebar-bg: "#070B10"
+  panel: "#101820"
+  panel-raised: "#15212B"
+  border: "#253240"
+  divider: "#1D2A36"
+  text: "#E6EDF3"
+  muted-copy: "#8B98A5"
+  faint-copy: "#5E6B78"
+  terminal-cyan: "#38D9F5"
+  success: "#36D399"
+  success-bg: "#123525"
+  warning: "#F6C85F"
+  warning-bg: "#352A13"
+  critical: "#F87171"
+  critical-bg: "#3A171D"
 typography:
+  brand:
+    fontFamily: "\"Chelsea Market\", \"Trebuchet MS\", system-ui, sans-serif"
+    fontSize: "22px"
+    fontWeight: 400
+    lineHeight: 1.14
   display:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "34px"
@@ -59,13 +64,13 @@ spacing:
 components:
   nav-item:
     backgroundColor: "transparent"
-    textColor: "{colors.nav-copy}"
+    textColor: "{colors.muted-copy}"
     typography: "{typography.body}"
     rounded: "{rounded.md}"
     padding: "10px 12px"
   nav-item-active:
     backgroundColor: "{colors.panel-raised}"
-    textColor: "{colors.operational-slate}"
+    textColor: "{colors.text}"
     typography: "{typography.body}"
     rounded: "{rounded.md}"
     padding: "10px 12px"
@@ -93,70 +98,74 @@ components:
 
 **Creative North Star: "The Local Operations Console"**
 
-homelab should feel like a private technical console for a solo developer who checks it between deploys, cron runs, and server chores. The system is minimal, compact, and task-first: dark navigation gives the product a grounded operational frame, while the working surface stays light, quiet, and scannable.
+homelab should feel like a private technical console for a solo developer who checks it between deploys, cron runs, and server chores. The system is minimal, compact, and task-first: a mostly dark charcoal workspace, terminal-like command framing, and clear status rows make it feel native to a developer workstation without drifting into novelty.
 
-The design deliberately rejects marketing-site polish, public status-page ceremony, enterprise observability drama, and neon terminal cosplay. Visual energy is reserved for real operational state: active navigation, status pills, timeline markers, and health counts.
+The design deliberately rejects marketing-site polish, public status-page ceremony, enterprise observability drama, and neon terminal cosplay. Visual energy is reserved for real operational state: active navigation, the command bar, status pills, health counts, and timeline log rows.
 
 **Key Characteristics:**
-- Restrained product UI with a dark slate shell and light operational workspace.
+- Restrained product UI with mostly dark charcoal surfaces and precise hairline borders.
+- A Chelsea Market wordmark limited to the sidebar brand.
 - Bold compact type for scan speed, not personality display.
-- Flat surfaces with borders and tonal separation instead of decorative shadows.
+- Monospace accents for paths, commands, timestamps, IDs, and status metadata.
+- Flat dark surfaces with tonal separation instead of decorative shadows.
 - Semantic health color paired with explicit labels.
 - Dense but calm layouts that keep current problems easy to find.
 
 ## 2. Colors
 
-The palette is a restrained technical product palette: cool neutral surfaces, one mint signal accent, and purpose-built health colors.
+The palette is a restrained developer-console palette: charcoal surfaces, cooler cyan signal color, and purpose-built semantic health colors.
 
 ### Primary
-- **Operational Slate**: the dark shell color for the sidebar and the primary ink color for active states. It gives the app a technical frame without turning the whole interface into dark mode.
-- **Signal Mint**: the sparse accent for timeline dots and positive operational signal. It should stay rare.
+- **Console Background**: the app-wide near-black surface for the mostly dark workspace.
+- **Panel Charcoal**: the default dashboard panel surface.
+- **Terminal Cyan**: the sparse accent for command prompts, active operational signal, and key status metadata. It should stay rare.
 
 ### Secondary
-- **Health Green**: success status uses a soft green fill with dark green text so the label remains readable and does not rely on color alone.
-- **Warning Amber**: warning status uses a warm pale fill with brown text for non-critical attention.
-- **Critical Red**: critical status uses a pale red fill with dark red text for urgent operational action.
+- **Health Green**: success status uses green text on a dark green wash so the label remains readable and does not rely on color alone.
+- **Warning Amber**: warning status uses amber text on a dark amber wash for non-critical attention.
+- **Critical Red**: critical status uses red text on a dark red wash for urgent operational action.
 
 ### Neutral
-- **App Canvas**: the main dashboard background. It is cool and quiet, not cream, beige, or decorative.
-- **Panel White**: the card and panel surface for metrics, sections, and compact summaries.
-- **Panel Raised**: the active navigation surface and slightly lifted neutral state.
-- **Quiet Border**: the outer container stroke.
+- **Sidebar Background**: the darkest stable rail for navigation and workspace context.
+- **Raised Panel**: active navigation, command bar chips, and header summaries.
+- **Quiet Border**: the dark interface stroke.
 - **Row Divider**: the internal list separator.
 - **Muted Copy**: secondary body text, timestamps, labels, and metadata.
-- **Navigation Copy**: inactive sidebar text against Operational Slate.
+- **Faint Copy**: tertiary metadata and low-emphasis labels.
 
 ### Named Rules
 
 **The Quiet Until Broken Rule.** Neutral surfaces carry most of the interface. Health colors appear only where they communicate actual state.
 
-**The No Marketing Blue Rule.** Do not introduce default SaaS blues for primary actions or charts. homelab's visual identity is slate, white, and sparse mint.
+**The No Marketing Blue Rule.** Do not introduce default SaaS blues for primary actions or charts. homelab's visual identity is charcoal, cyan, and restrained semantic state color.
 
 ## 3. Typography
 
+**Brand Font:** Chelsea Market for the top-left `homelab` wordmark only.
 **Display Font:** Inter/system sans stack.
 **Body Font:** Inter/system sans stack.
-**Label/Mono Font:** No separate mono or label font exists yet.
+**Label/Mono Font:** UI monospace stack for commands, timestamps, IDs, paths, and compact state metadata.
 
-**Character:** The type system is compact, bold, and utilitarian. It uses one sans family across headings, labels, navigation, and data so the product feels familiar and fast rather than branded.
+**Character:** The type system is compact, bold, and utilitarian. The brand name gets one expressive type moment; sans carries structure and reading; monospace is used as a developer-console accent for paths, commands, timestamps, IDs, and scan metadata.
 
 ### Hierarchy
 
 - **Display** (800, 34px, 1.15): Page titles such as Dashboard. Use sparingly; product screens should not need hero-scale type.
-- **Headline** (800, 24px, 1.2): Product brand in the sidebar and major screen-level anchors.
+- **Brand** (400, 22px, 1.14): Sidebar wordmark only.
+- **Headline** (800, 24px, 1.2): Major screen-level anchors.
 - **Title** (800, 17px, 1.25): Section headings and panel titles.
 - **Body** (400-800, 14-16px, 1.43-1.5): Project names, summaries, alert messages, and dashboard explanations. Keep longer prose under 75ch.
-- **Label** (700-800, 12-13px, normal letter spacing, uppercase only for compact metadata): Metric labels, status labels, timestamps, and run-state metadata.
+- **Label** (700-800, 12-13px, normal letter spacing, uppercase only for compact metadata): Metric labels, status labels, timestamps, commands, and run-state metadata.
 
 ### Named Rules
 
-**The One Sans Rule.** Do not add display fonts, novelty monospace, or decorative type. This is a tool, and the type should disappear into the task.
+**The Wordmark Exception Rule.** Chelsea Market is reserved for the `homelab` wordmark. Use sans for UI structure and monospace only where developer-console metadata earns it.
 
 **The No Hero Dashboard Rule.** Dashboard headings stay fixed and compact. Avoid fluid hero typography in app surfaces.
 
 ## 4. Elevation
 
-homelab is flat by default. Depth is communicated through a cool canvas, white panels, 1px borders, internal dividers, and spacing. Shadows are not part of the current vocabulary and should not be added as decoration.
+homelab is flat by default. Depth is communicated through dark surface lightness, 1px borders, internal dividers, and spacing. Shadows are not part of the current vocabulary and should not be added as decoration.
 
 ### Named Rules
 
@@ -166,11 +175,11 @@ homelab is flat by default. Depth is communicated through a cool canvas, white p
 
 ### Navigation
 
-The sidebar is a stable technical frame: dark slate surface, compact bold labels, and a clear active item.
+The sidebar is a stable technical frame: near-black surface, compact bold labels, and a clear active item.
 
 - **Shape:** Gently squared controls with an 8px radius.
-- **Default:** Transparent item background with Navigation Copy text.
-- **Active:** Panel Raised background with Operational Slate text.
+- **Default:** Transparent item background with Muted Copy text.
+- **Active:** Raised Panel background with Text foreground.
 - **Spacing:** 10px vertical by 12px horizontal padding; 6px between items.
 
 ### Status Chips
@@ -178,7 +187,7 @@ The sidebar is a stable technical frame: dark slate surface, compact bold labels
 Status chips are semantic labels, not decorative pills.
 
 - **Shape:** Full pill radius.
-- **Style:** Soft semantic fill with dark readable text.
+- **Style:** Dark semantic fill with bright readable text.
 - **State:** Always include the text label Healthy, Warning, or Critical. Color alone is forbidden.
 - **Padding:** 5px vertical by 10px horizontal.
 
@@ -187,7 +196,7 @@ Status chips are semantic labels, not decorative pills.
 Cards and sections are restrained information containers.
 
 - **Corner Style:** Gently squared (8px).
-- **Background:** Panel White on App Canvas.
+- **Background:** Panel Charcoal on Console Background.
 - **Shadow Strategy:** No shadows at rest.
 - **Border:** 1px Quiet Border on outer panels; Row Divider inside lists.
 - **Internal Padding:** 18px for dashboard panels, 14px for compact run-status panels.
@@ -196,7 +205,7 @@ Cards and sections are restrained information containers.
 
 Metric tiles are compact readouts, not hero stats.
 
-- **Style:** Same container vocabulary as cards.
+- **Style:** Same dark container vocabulary as cards.
 - **Typography:** Uppercase Label for the metric name and 30px bold value.
 - **Behavior:** Keep values close to their labels; avoid decorative charts unless they answer an operational question.
 
@@ -206,13 +215,13 @@ Rows are dense and scan-oriented.
 
 - **Layout:** Main text flexes; metadata aligns to the right.
 - **Dividers:** 1px Row Divider between items.
-- **Timeline Marker:** Small Signal Mint dot, 12px square with 6px radius.
+- **Timeline Structure:** Monospace time and event type columns, followed by readable sans project/message text.
 
 ## 6. Do's and Don'ts
 
 ### Do:
 
-- **Do** keep the default screen mostly neutral: App Canvas, Panel White, Operational Slate, and sparse Signal Mint.
+- **Do** keep the default screen mostly dark and neutral: Console Background, Panel Charcoal, Raised Panel, and sparse Terminal Cyan.
 - **Do** use exact status labels with semantic colors for every health state.
 - **Do** keep card corners at 8px and status pills at 999px.
 - **Do** use flat 1px borders and internal dividers for structure.
@@ -224,4 +233,4 @@ Rows are dense and scan-oriented.
 - **Don't** add oversized hero sections, decorative metrics, over-styled dashboard chrome, playful branding, heavy gradients, or dense visual noise.
 - **Don't** introduce gradient text, glassmorphism, wide drop shadows, or 32px-plus card radii.
 - **Don't** use color without a label for health or alert state.
-- **Don't** turn the whole app dark just because the product is technical; the current identity is a dark shell around a light workspace.
+- **Don't** turn terminal/developer theming into novelty: no Matrix rain, fake hacker decoration, or unreadable green-on-black cosplay.
