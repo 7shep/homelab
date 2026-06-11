@@ -8,6 +8,11 @@ export default defineConfig({
       'react-native': 'react-native-web'
     }
   },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8787'
+    }
+  },
   test: {
     environment: 'jsdom',
     globals: true,
