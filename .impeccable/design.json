@@ -1,135 +1,62 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-06-11T17:46:53.0696511-04:00",
+  "generatedAt": "2026-06-11T18:18:30.0000000-04:00",
   "title": "Design System: homelab",
   "extensions": {
     "colorMeta": {
-      "operational-slate": {
-        "role": "primary",
-        "displayName": "Operational Slate",
-        "canonical": "#111827",
-        "tonalRamp": [
-          "oklch(15% 0.03 260)",
-          "oklch(25% 0.035 260)",
-          "oklch(35% 0.03 260)",
-          "oklch(45% 0.025 260)",
-          "oklch(58% 0.02 260)",
-          "oklch(72% 0.015 260)",
-          "oklch(86% 0.01 260)",
-          "oklch(95% 0.006 260)"
-        ]
-      },
-      "app-canvas": {
+      "console-bg": {
         "role": "neutral",
-        "displayName": "App Canvas",
-        "canonical": "#F6F7F9",
-        "tonalRamp": [
-          "#111827",
-          "#374151",
-          "#64748B",
-          "#94A3B8",
-          "#CBD5E1",
-          "#E5E7EB",
-          "#EEF2F7",
-          "#F6F7F9"
-        ]
+        "displayName": "Console Background",
+        "canonical": "#090D12",
+        "tonalRamp": ["#05080C", "#090D12", "#0D1319", "#101820", "#15212B", "#1D2A36", "#253240", "#E6EDF3"]
       },
       "panel": {
         "role": "neutral",
-        "displayName": "Panel White",
-        "canonical": "#FFFFFF",
-        "tonalRamp": [
-          "#111827",
-          "#374151",
-          "#64748B",
-          "#94A3B8",
-          "#CBD5E1",
-          "#E5E7EB",
-          "#F9FAFB",
-          "#FFFFFF"
-        ]
+        "displayName": "Panel Charcoal",
+        "canonical": "#101820",
+        "tonalRamp": ["#05080C", "#090D12", "#101820", "#15212B", "#1D2A36", "#253240", "#8B98A5", "#E6EDF3"]
       },
-      "signal-mint": {
+      "terminal-cyan": {
         "role": "primary",
-        "displayName": "Signal Mint",
-        "canonical": "#2DD4BF",
-        "tonalRamp": [
-          "oklch(18% 0.055 185)",
-          "oklch(28% 0.075 185)",
-          "oklch(40% 0.095 185)",
-          "oklch(52% 0.11 185)",
-          "oklch(65% 0.12 185)",
-          "oklch(76% 0.1 185)",
-          "oklch(88% 0.06 185)",
-          "oklch(95% 0.03 185)"
-        ]
+        "displayName": "Terminal Cyan",
+        "canonical": "#38D9F5",
+        "tonalRamp": ["#062A33", "#0B3F4C", "#116273", "#168CA3", "#20B8D2", "#38D9F5", "#8AEAF8", "#D6FAFF"]
       },
-      "critical-text": {
+      "success": {
         "role": "semantic",
-        "displayName": "Critical Red Text",
-        "canonical": "#991B1B",
-        "tonalRamp": [
-          "#450A0A",
-          "#7F1D1D",
-          "#991B1B",
-          "#B91C1C",
-          "#DC2626",
-          "#F87171",
-          "#FECACA",
-          "#FEE2E2"
-        ]
+        "displayName": "Health Green",
+        "canonical": "#36D399",
+        "tonalRamp": ["#062016", "#123525", "#145C3F", "#15845C", "#20B97F", "#36D399", "#8CE8C4", "#D7FBEF"]
       },
-      "warning-text": {
+      "warning": {
         "role": "semantic",
-        "displayName": "Warning Amber Text",
-        "canonical": "#92400E",
-        "tonalRamp": [
-          "#451A03",
-          "#78350F",
-          "#92400E",
-          "#B45309",
-          "#D97706",
-          "#FBBF24",
-          "#FDE68A",
-          "#FEF3C7"
-        ]
+        "displayName": "Warning Amber",
+        "canonical": "#F6C85F",
+        "tonalRamp": ["#201506", "#352A13", "#6B4B18", "#A27121", "#D99D34", "#F6C85F", "#F9DE9C", "#FFF4D6"]
       },
-      "success-text": {
+      "critical": {
         "role": "semantic",
-        "displayName": "Health Green Text",
-        "canonical": "#166534",
-        "tonalRamp": [
-          "#052E16",
-          "#14532D",
-          "#166534",
-          "#15803D",
-          "#16A34A",
-          "#86EFAC",
-          "#BBF7D0",
-          "#DCFCE7"
-        ]
+        "displayName": "Critical Red",
+        "canonical": "#F87171",
+        "tonalRamp": ["#24080D", "#3A171D", "#6B1F2A", "#A3313E", "#D84D5A", "#F87171", "#FDB0B0", "#FFE1E1"]
       }
     },
     "typographyMeta": {
+      "brand": {
+        "displayName": "Wordmark",
+        "purpose": "Chelsea Market is reserved for the top-left homelab brand only."
+      },
       "display": {
         "displayName": "Dashboard Display",
-        "purpose": "Screen titles only; never hero marketing scale."
-      },
-      "headline": {
-        "displayName": "Product Headline",
-        "purpose": "Brand and major UI anchors."
-      },
-      "title": {
-        "displayName": "Panel Title",
-        "purpose": "Section and card headings."
+        "purpose": "Screen title only; compact and fixed, never hero scale."
       },
       "body": {
         "displayName": "Operational Body",
-        "purpose": "Project names, summaries, alert messages, and timeline text."
+        "purpose": "Readable dashboard copy, project names, alert messages, and summaries."
       },
       "label": {
-        "displayName": "Compact Label",
-        "purpose": "Status chips, timestamps, metrics, and metadata."
+        "displayName": "Console Metadata",
+        "purpose": "Status labels, timestamps, command text, paths, IDs, and compact metadata."
       }
     },
     "shadows": [],
@@ -137,12 +64,7 @@
       {
         "name": "state-fast",
         "value": "150ms ease-out",
-        "purpose": "Reserved for future hover, focus, and state feedback."
-      },
-      {
-        "name": "state-standard",
-        "value": "200ms cubic-bezier(0.22, 1, 0.36, 1)",
-        "purpose": "Future product transitions that communicate state changes."
+        "purpose": "Reserved for hover, focus, and state feedback."
       }
     ],
     "breakpoints": [
@@ -158,20 +80,20 @@
   },
   "components": [
     {
-      "name": "Sidebar Navigation Item",
-      "kind": "nav",
-      "refersTo": "nav-item",
-      "description": "Inactive navigation entry inside the dark operational sidebar.",
-      "html": "<a class=\"ds-nav-item\" href=\"#\">Projects</a>",
-      "css": ".ds-nav-item { display: block; color: #CBD5E1; background: transparent; border-radius: 8px; padding: 10px 12px; font: 700 15px/1.2 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; text-decoration: none; } .ds-nav-item:hover { background: rgba(249, 250, 251, 0.08); color: #FFFFFF; } .ds-nav-item:focus-visible { outline: 2px solid #A7F3D0; outline-offset: 2px; }"
+      "name": "Command Bar",
+      "kind": "custom",
+      "refersTo": "command-bar",
+      "description": "Terminal-inspired scan command and last-sweep status header.",
+      "html": "<div class=\"ds-command-bar\"><span class=\"ds-prompt\">~/ops</span><code>scan --projects --alerts --timeline</code><span class=\"ds-sweep\">Last sweep 42s ago</span></div>",
+      "css": ".ds-command-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #101820; color: #E6EDF3; border: 1px solid #253240; border-radius: 10px; padding: 12px 16px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-command-bar code, .ds-prompt, .ds-sweep { font-family: ui-monospace, SFMono-Regular, \"SF Mono\", Consolas, \"Liberation Mono\", Menlo, monospace; font-size: 12px; } .ds-prompt { color: #38D9F5; font-weight: 800; } .ds-command-bar code { color: #8B98A5; } .ds-sweep { color: #E6EDF3; background: #15212B; border: 1px solid #253240; border-radius: 999px; padding: 7px 12px; font-weight: 700; }"
     },
     {
       "name": "Active Sidebar Navigation Item",
       "kind": "nav",
       "refersTo": "nav-item-active",
-      "description": "Selected route state for sidebar navigation.",
+      "description": "Selected route state for the dark sidebar.",
       "html": "<a class=\"ds-nav-item-active\" href=\"#\">Dashboard</a>",
-      "css": ".ds-nav-item-active { display: block; color: #111827; background: #F9FAFB; border-radius: 8px; padding: 10px 12px; font: 700 15px/1.2 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; text-decoration: none; } .ds-nav-item-active:focus-visible { outline: 2px solid #A7F3D0; outline-offset: 2px; }"
+      "css": ".ds-nav-item-active { display: block; color: #E6EDF3; background: #15212B; border: 1px solid #253240; border-radius: 8px; padding: 10px 12px; font: 700 14px/1.2 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; text-decoration: none; } .ds-nav-item-active:focus-visible { outline: 2px solid #38D9F5; outline-offset: 2px; }"
     },
     {
       "name": "Critical Status Pill",
@@ -179,40 +101,41 @@
       "refersTo": "status-pill-critical",
       "description": "Semantic critical health label with color and text.",
       "html": "<span class=\"ds-status-pill ds-status-pill-critical\">Critical</span>",
-      "css": ".ds-status-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font: 800 12px/1.2 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-status-pill-critical { color: #991B1B; background: #FEE2E2; }"
+      "css": ".ds-status-pill { display: inline-flex; align-items: center; border-radius: 999px; border: 1px solid currentColor; padding: 5px 10px; font: 800 12px/1.2 ui-monospace, SFMono-Regular, \"SF Mono\", Consolas, \"Liberation Mono\", Menlo, monospace; } .ds-status-pill-critical { color: #F87171; background: #3A171D; }"
     },
     {
       "name": "Panel Card",
       "kind": "card",
       "refersTo": "panel-card",
-      "description": "Flat bordered surface for dashboard sections and summaries.",
-      "html": "<section class=\"ds-panel-card\"><h3>Projects needing attention</h3><p>Disk usage crossed 90% on Primary VPS.</p></section>",
-      "css": ".ds-panel-card { background: #FFFFFF; color: #111827; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-panel-card h3 { margin: 0 0 14px; font-size: 17px; line-height: 1.25; font-weight: 800; } .ds-panel-card p { margin: 0; color: #64748B; font-size: 14px; line-height: 1.43; }"
+      "description": "Flat dark bordered surface for dashboard sections.",
+      "html": "<section class=\"ds-panel-card\"><header><h3>Projects needing attention</h3><code>homelab projects --watch</code></header><p>Disk usage crossed 90% on Primary VPS.</p></section>",
+      "css": ".ds-panel-card { background: #101820; color: #E6EDF3; border: 1px solid #253240; border-radius: 10px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-panel-card header { background: #15212B; border-bottom: 1px solid #253240; padding: 14px 16px; } .ds-panel-card h3 { margin: 0; font-size: 16px; line-height: 1.3; font-weight: 800; } .ds-panel-card code { display: block; margin-top: 5px; color: #5E6B78; font-size: 12px; } .ds-panel-card p { margin: 0; padding: 16px; color: #8B98A5; font-size: 14px; line-height: 1.43; }"
     },
     {
       "name": "Metric Tile",
       "kind": "card",
       "refersTo": "metric-card",
-      "description": "Compact dashboard metric tile for health counts.",
-      "html": "<div class=\"ds-metric-card\"><span>Active alerts</span><strong>2</strong></div>",
-      "css": ".ds-metric-card { background: #FFFFFF; color: #111827; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-metric-card span { display: block; color: #64748B; font-size: 13px; line-height: 1.2; font-weight: 800; text-transform: uppercase; } .ds-metric-card strong { display: block; margin-top: 8px; font-size: 30px; line-height: 1.1; font-weight: 800; }"
+      "description": "Compact console metric tile for health counts.",
+      "html": "<div class=\"ds-metric-card\"><span>Active alerts</span><strong>2</strong><small>open incidents</small></div>",
+      "css": ".ds-metric-card { background: #101820; color: #E6EDF3; border: 1px solid #253240; border-radius: 10px; padding: 16px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-metric-card span { display: block; color: #8B98A5; font: 800 12px/1.2 ui-monospace, SFMono-Regular, \"SF Mono\", Consolas, \"Liberation Mono\", Menlo, monospace; text-transform: uppercase; } .ds-metric-card strong { display: block; margin-top: 9px; font: 800 30px/1.1 ui-monospace, SFMono-Regular, \"SF Mono\", Consolas, \"Liberation Mono\", Menlo, monospace; } .ds-metric-card small { display: block; margin-top: 5px; color: #5E6B78; font-size: 13px; font-weight: 700; }"
     },
     {
       "name": "Timeline Row",
       "kind": "custom",
       "refersTo": "timeline-row",
-      "description": "Dense timeline event row with the mint operational marker.",
-      "html": "<div class=\"ds-timeline-row\"><span class=\"ds-timeline-dot\"></span><div><strong>API Gateway</strong><p>Deployed 1.8.4 from main</p></div><time>23m ago</time></div>",
-      "css": ".ds-timeline-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid #EEF2F7; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-timeline-dot { width: 12px; height: 12px; border-radius: 6px; background: #2DD4BF; flex: 0 0 auto; } .ds-timeline-row div { flex: 1; } .ds-timeline-row strong { display: block; color: #111827; font-size: 14px; font-weight: 800; } .ds-timeline-row p { margin: 4px 0 0; color: #64748B; font-size: 14px; } .ds-timeline-row time { color: #64748B; font-size: 12px; font-weight: 800; }"
+      "description": "Terminal-log timeline row with time and event type columns.",
+      "html": "<div class=\"ds-timeline-row\"><time>23m ago</time><code>deploy</code><div><strong>API Gateway</strong><p>Deployed 1.8.4 from main</p></div></div>",
+      "css": ".ds-timeline-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid #1D2A36; background: #101820; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; } .ds-timeline-row time { width: 64px; color: #5E6B78; font: 800 12px/1.2 ui-monospace, SFMono-Regular, \"SF Mono\", Consolas, \"Liberation Mono\", Menlo, monospace; } .ds-timeline-row code { min-width: 78px; color: #38D9F5; font: 800 12px/1.2 ui-monospace, SFMono-Regular, \"SF Mono\", Consolas, \"Liberation Mono\", Menlo, monospace; } .ds-timeline-row div { flex: 1; min-width: 220px; } .ds-timeline-row strong { display: block; color: #E6EDF3; font-size: 14px; font-weight: 800; } .ds-timeline-row p { margin: 3px 0 0; color: #8B98A5; font-size: 14px; line-height: 1.43; }"
     }
   ],
   "narrative": {
     "northStar": "The Local Operations Console",
-    "overview": "homelab should feel like a private technical console for a solo developer who checks it between deploys, cron runs, and server chores. The system is minimal, compact, and task-first: dark navigation gives the product a grounded operational frame, while the working surface stays light, quiet, and scannable.\n\nThe design deliberately rejects marketing-site polish, public status-page ceremony, enterprise observability drama, and neon terminal cosplay. Visual energy is reserved for real operational state: active navigation, status pills, timeline markers, and health counts.",
-    "keyCharacteristics": [
-      "Restrained product UI with a dark slate shell and light operational workspace.",
-      "Bold compact type for scan speed, not personality display.",
-      "Flat surfaces with borders and tonal separation instead of decorative shadows.",
+    "overview": "homelab should feel like a private technical console for a solo developer who checks it between deploys, cron runs, and server chores. The system is minimal, compact, and task-first: a mostly dark charcoal workspace, terminal-like command framing, and clear status rows make it feel native to a developer workstation without drifting into novelty.",
+      "keyCharacteristics": [
+      "Restrained product UI with mostly dark charcoal surfaces and precise hairline borders.",
+      "A Chelsea Market wordmark limited to the sidebar brand.",
+      "Monospace accents for paths, commands, timestamps, IDs, and status metadata.",
+      "Flat dark surfaces with tonal separation instead of decorative shadows.",
       "Semantic health color paired with explicit labels.",
       "Dense but calm layouts that keep current problems easy to find."
     ],
@@ -224,27 +147,17 @@
       },
       {
         "name": "The No Marketing Blue Rule",
-        "body": "Do not introduce default SaaS blues for primary actions or charts. homelab's visual identity is slate, white, and sparse mint.",
+        "body": "Do not introduce default SaaS blues for primary actions or charts. homelab's visual identity is charcoal, cyan, and restrained semantic state color.",
         "section": "colors"
       },
       {
-        "name": "The One Sans Rule",
-        "body": "Do not add display fonts, novelty monospace, or decorative type. This is a tool, and the type should disappear into the task.",
+        "name": "The Wordmark Exception Rule",
+        "body": "Chelsea Market is reserved for the homelab wordmark. Use sans for UI structure and monospace only where developer-console metadata earns it.",
         "section": "typography"
-      },
-      {
-        "name": "The No Hero Dashboard Rule",
-        "body": "Dashboard headings stay fixed and compact. Avoid fluid hero typography in app surfaces.",
-        "section": "typography"
-      },
-      {
-        "name": "The Border-Only Rule",
-        "body": "Panels use a 1px Quiet Border and no drop shadow at rest. If future interaction needs elevation, use a small state-specific shadow only after the interaction earns it.",
-        "section": "elevation"
       }
     ],
     "dos": [
-      "Do keep the default screen mostly neutral: App Canvas, Panel White, Operational Slate, and sparse Signal Mint.",
+      "Do keep the default screen mostly dark and neutral: Console Background, Panel Charcoal, Raised Panel, and sparse Terminal Cyan.",
       "Do use exact status labels with semantic colors for every health state.",
       "Do keep card corners at 8px and status pills at 999px.",
       "Do use flat 1px borders and internal dividers for structure.",
@@ -255,7 +168,7 @@
       "Don't add oversized hero sections, decorative metrics, over-styled dashboard chrome, playful branding, heavy gradients, or dense visual noise.",
       "Don't introduce gradient text, glassmorphism, wide drop shadows, or 32px-plus card radii.",
       "Don't use color without a label for health or alert state.",
-      "Don't turn the whole app dark just because the product is technical; the current identity is a dark shell around a light workspace."
+      "Don't turn terminal/developer theming into novelty: no Matrix rain, fake hacker decoration, or unreadable green-on-black cosplay."
     ]
   }
 }
