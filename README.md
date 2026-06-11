@@ -19,10 +19,6 @@
 </p>
 
 <p align="center">
-  Current repo stats: 0 stars, 0 forks, 0 open issues, 0 open PRs.
-</p>
-
-<p align="center">
   homelab keeps a private operational dashboard in one place so you can see what is healthy, what changed, what broke, and what needs attention without bouncing between terminals and provider dashboards.
 </p>
 
