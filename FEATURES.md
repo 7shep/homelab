@@ -2,6 +2,18 @@
 
 homelab is tiny observability for solo developers, side projects, and small self-hosted stacks. It focuses on answering the practical questions: what is running, what changed, what broke, and what needs attention.
 
+## Current Status
+
+### Implemented
+
+- Application shell and navigation
+- Status dashboard
+- Event timeline
+
+### In Progress / Planned
+
+- Everything else below is still on the roadmap and needs issue tracking or implementation work.
+
 ## Core Features
 
 ### Project Registry
@@ -20,7 +32,7 @@ Monitor certificate expiration for configured domains. homelab should warn befor
 
 Record deploy events with version numbers, git SHAs, timestamps, and optional notes. These markers make it easier to see whether failures started after a specific release.
 
-### Event Timeline
+### Event Timeline *(implemented)*
 
 Show health checks, deploys, alerts, cron runs, and server warnings on one timeline. The timeline should answer, "What changed before this broke?"
 
@@ -40,7 +52,7 @@ Track whether expected containers are running, restarting, unhealthy, or missing
 
 Send alerts when checks fail, cron jobs miss their window, disks fill up, or certificates approach expiration. Start with email and webhooks, then add Discord, Slack, and other targets.
 
-### Status Dashboard
+### Status Dashboard *(implemented)*
 
 Provide a small web UI that shows all projects and their current state. The dashboard should be calm, scannable, and focused on what needs attention now.
 
