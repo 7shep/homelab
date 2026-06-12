@@ -11,5 +11,8 @@ app.use('/*', serveStatic({ root: './dist' }));
 app.get('/*', serveStatic({ path: './dist/index.html' }));
 
 const port = Number(process.env.PORT ?? 8787);
-serve({ fetch: app.fetch, port });
-console.log(`homelab api listening on :${port}`);
+// Bind to loopback by default so the API (which has no auth yet) is not exposed
+// on the LAN. Override with HOST=0.0.0.0 only behind a trusted reverse proxy.
+const hostname = process.env.HOST ?? '127.0.0.1';
+serve({ fetch: app.fetch, port, hostname });
+console.log(`homelab api listening on http://${hostname}:${port}`);
