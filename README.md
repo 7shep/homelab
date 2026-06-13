@@ -36,10 +36,11 @@
 
 **What it uses**
 
-- React
-- TypeScript
-- Vite
-- React Native Web
+- React + React Native Web
+- TypeScript + Vite
+- react-router-dom
+- Hono API + Drizzle ORM
+- Postgres (Docker)
 
 </td>
 </tr>
@@ -47,10 +48,28 @@
 
 ## Quick Start
 
+The frontend talks to a small Hono API backed by Postgres. For local
+development, run the database, apply migrations, then start the API and the
+Vite dev server (which proxies `/api` to the API):
+
 ```bash
 npm install
-npm run dev
+npm run db:up        # start postgres in docker (loopback only)
+npm run db:migrate   # apply migrations
+npm run dev:api      # start the api on :8787
+npm run dev          # start the vite frontend (proxies /api)
 ```
+
+Copy `.env.example` to `.env` to override credentials or the port.
+
+### Full stack in Docker
+
+```bash
+docker compose up --build
+```
+
+The API container applies migrations on boot, serves the built frontend, and
+exposes the REST API on `127.0.0.1:8787`.
 
 For a production check:
 
@@ -72,19 +91,30 @@ The dashboard is intentionally quiet and dense:
 ## Scripts
 
 - `npm run dev`: start the local Vite dev server
-- `npm run build`: type-check and build for production
+- `npm run dev:api`: start the Hono API with hot reload on :8787
+- `npm run build`: type-check (frontend + server) and build for production
 - `npm test`: run the Vitest suite
+- `npm run db:up`: start Postgres in Docker
+- `npm run db:generate`: generate a Drizzle migration from the schema
+- `npm run db:migrate`: apply pending migrations
 
-## Data
+## Backend & Data
 
-The current UI uses local sample data in `src/appData.ts` to keep the shell stable while the dashboard shape is refined.
+Projects and their components are persisted in Postgres via a small Hono REST
+API (`/api/projects`, `/api/projects/:id/components`, …). Project status is
+derived at read time from the worst component status and is never stored. The
+dashboard still renders sample data from `src/appData.ts`; the registry screens
+(Projects, project detail) read and write live data through the API.
 
 ## Project Structure
 
-- `src/App.tsx` contains the dashboard shell and sections
-- `src/appData.ts` contains the sample projects, alerts, metrics, and timeline events
-- `src/global.css` sets the global theme and font imports
-- `src/App.test.tsx` covers the core dashboard rendering behavior
+- `src/App.tsx` is the react-router shell (sidebar + routed content)
+- `src/screens/` holds the Dashboard, ProjectsList, ProjectForm, and
+  ProjectDetail screens
+- `src/api/` holds the typed fetch client and data hooks
+- `server/` holds the Hono app, validation, and the Drizzle repository/schema
+- `shared/types.ts` holds the domain types shared by the client and server
+- `src/appData.ts` contains the sample data still used by the dashboard
 
 ## Notes
 

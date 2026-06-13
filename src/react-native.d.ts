@@ -17,9 +17,24 @@ declare module 'react-native' {
     contentContainerStyle?: StyleProp<CSSProperties>;
   };
 
+  export type PressableProps = ViewProps & {
+    onPress?: () => void;
+    disabled?: boolean;
+  };
+
+  export type TextInputProps = ViewProps & {
+    placeholder?: string;
+    placeholderTextColor?: string;
+    value?: string;
+    onChangeText?: (text: string) => void;
+    multiline?: boolean;
+  };
+
   export const View: ComponentType<ViewProps>;
   export const Text: ComponentType<TextProps>;
   export const ScrollView: ComponentType<ScrollViewProps>;
+  export const Pressable: ComponentType<PressableProps>;
+  export const TextInput: ComponentType<TextInputProps>;
 
   export const StyleSheet: {
     create<T extends Record<string, CSSProperties>>(styles: T): T;
