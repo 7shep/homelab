@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-homelab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-homelab}
+      POSTGRES_DB: ${POSTGRES_DB:-homelab}
+    # Bind to loopback only so the database is reachable from the host (and the
+    # api container via the internal network), never the wider LAN. Override
+    # credentials via a .env file in any shared or production environment.
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - homelab-db:/var/lib/postgresql/data
+
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-homelab}:${POSTGRES_PASSWORD:-homelab}@db:5432/${POSTGRES_DB:-homelab}
+      PORT: 8787
+    # Bind to loopback on the host. The API has no authentication yet, so put it
+    # behind a reverse proxy (or override to 0.0.0.0) before exposing it.
+    ports:
+      - '127.0.0.1:8787:8787'
+
+volumes:
+  homelab-db:
