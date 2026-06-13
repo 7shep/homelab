@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
   Box,
+  Boxes,
   ChevronRight,
   CircleAlert,
   CircleCheckBig,
@@ -10,7 +11,17 @@ import {
   Server,
   TriangleAlert
 } from 'lucide-react';
-import { alerts, metrics, projects, timelineEvents, type Metric } from '../appData';
+import {
+  alerts,
+  containers,
+  groupContainersByServerAndProject,
+  metrics,
+  projects,
+  timelineEvents,
+  type ContainerState,
+  type Metric,
+  type TimelineEvent
+} from '../appData';
 import { StatusDot, StatusPill } from '../components/StatusPill';
 import { colors, monoStack, sansStack, statusStyles } from '../theme';
 
@@ -27,6 +38,54 @@ const metricPalette: Record<
   warning: { color: colors.warning, bg: '#4B3806', border: '#A87B05', icon: TriangleAlert },
   critical: { color: colors.critical, bg: '#4B171F', border: '#B43A44', icon: OctagonAlert },
   total: { color: colors.text, bg: '#122230', border: colors.border, icon: Server }
+};
+
+const containerStateStyles: Record<
+  ContainerState,
+  { label: string; color: string; backgroundColor: string; borderColor: string }
+> = {
+  running: {
+    label: 'Running',
+    color: colors.success,
+    backgroundColor: '#0B3325',
+    borderColor: '#158858'
+  },
+  restarting: {
+    label: 'Restarting',
+    color: colors.warning,
+    backgroundColor: '#332A0B',
+    borderColor: '#7B640F'
+  },
+  unhealthy: {
+    label: 'Unhealthy',
+    color: colors.critical,
+    backgroundColor: '#351319',
+    borderColor: '#A2373F'
+  },
+  missing: {
+    label: 'Missing',
+    color: colors.critical,
+    backgroundColor: '#351319',
+    borderColor: '#A2373F'
+  }
+};
+
+const timelineKindStyles: Record<
+  TimelineEvent['kind'],
+  { label: string; color: string; backgroundColor: string; borderColor: string }
+> = {
+  service: {
+    label: 'Service',
+    color: colors.accent,
+    backgroundColor: '#0C2230',
+    borderColor: '#174A61'
+  },
+  container: {
+    label: 'Container',
+    color: colors.warning,
+    backgroundColor: '#332A0B',
+    borderColor: '#7B640F'
+  }
 };
 
 function Trend({ metric }: { metric: Metric }) {
@@ -68,6 +127,189 @@ function MetricCard({ metric }: { metric: Metric }) {
       <Text style={[styles.metricLabel, { color: palette.color }]}>{metric.label}</Text>
       <Text style={styles.metricDetail}>{metric.detail}</Text>
       <Trend metric={metric} />
+    </View>
+  );
+}
+
+function ContainerStatePill({ state }: { state: ContainerState }) {
+  const style = containerStateStyles[state];
+
+  return (
+    <View
+      style={[
+        styles.containerStatePill,
+        {
+          backgroundColor: style.backgroundColor,
+          borderColor: style.borderColor
+        }
+      ]}
+    >
+      <Text style={[styles.containerStateText, { color: style.color }]}>{style.label}</Text>
+    </View>
+  );
+}
+
+function TimelineKindPill({ kind }: { kind: TimelineEvent['kind'] }) {
+  const style = timelineKindStyles[kind];
+
+  return (
+    <View
+      style={[
+        styles.timelineKindPill,
+        {
+          backgroundColor: style.backgroundColor,
+          borderColor: style.borderColor
+        }
+      ]}
+    >
+      <Text style={[styles.timelineKindText, { color: style.color }]}>{style.label}</Text>
+    </View>
+  );
+}
+
+function ContainerMonitoringSection() {
+  const groupedContainers = groupContainersByServerAndProject(containers);
+  const totals = containers.reduce(
+    (acc, container) => {
+      acc.total += 1;
+      acc[container.state] += 1;
+      return acc;
+    },
+    { total: 0, running: 0, restarting: 0, unhealthy: 0, missing: 0 }
+  );
+
+  return (
+    <Section title="Container monitoring" action="Grouped by server">
+      <View style={styles.containerSummaryRow}>
+        <View style={styles.containerSummaryChip}>
+          <Text style={styles.containerSummaryValue}>{totals.total}</Text>
+          <Text style={styles.containerSummaryLabel}>expected</Text>
+        </View>
+        <View style={styles.containerSummaryChip}>
+          <Text style={[styles.containerSummaryValue, { color: colors.success }]}>{totals.running}</Text>
+          <Text style={styles.containerSummaryLabel}>running</Text>
+        </View>
+        <View style={styles.containerSummaryChip}>
+          <Text style={[styles.containerSummaryValue, { color: colors.warning }]}>{totals.restarting}</Text>
+          <Text style={styles.containerSummaryLabel}>restarting</Text>
+        </View>
+        <View style={styles.containerSummaryChip}>
+          <Text style={[styles.containerSummaryValue, { color: colors.critical }]}>{totals.unhealthy}</Text>
+          <Text style={styles.containerSummaryLabel}>unhealthy</Text>
+        </View>
+        <View style={styles.containerSummaryChip}>
+          <Text style={[styles.containerSummaryValue, { color: colors.critical }]}>{totals.missing}</Text>
+          <Text style={styles.containerSummaryLabel}>missing</Text>
+        </View>
+      </View>
+
+      <View style={styles.containerGroupList}>
+        {groupedContainers.map((serverGroup) => {
+          const serverCounts = serverGroup.containers.reduce(
+            (acc, container) => {
+              acc[container.state] += 1;
+              return acc;
+            },
+            { running: 0, restarting: 0, unhealthy: 0, missing: 0 }
+          );
+          const problemCount = serverCounts.restarting + serverCounts.unhealthy + serverCounts.missing;
+
+          return (
+            <View key={serverGroup.serverName} style={styles.containerServerCard}>
+              <View style={styles.containerServerHeader}>
+                <View>
+                  <Text style={styles.containerServerName}>{serverGroup.serverName}</Text>
+                  <Text style={styles.containerServerMeta}>
+                    {serverGroup.containers.length} expected containers across {serverGroup.projects.length} projects
+                  </Text>
+                </View>
+                <View style={styles.containerServerCounts}>
+                  <Text style={styles.containerServerCountLabel}>{serverCounts.running} running</Text>
+                  <Text style={styles.containerServerCountLabel}>{problemCount} needing attention</Text>
+                </View>
+              </View>
+
+              {serverGroup.projects.map((projectGroup) => {
+                const projectProblems = projectGroup.containers.filter(
+                  (container) => container.state !== 'running'
+                ).length;
+
+                return (
+                  <View key={projectGroup.projectName} style={styles.containerProjectBlock}>
+                    <View style={styles.containerProjectHeader}>
+                      <View>
+                        <Text style={styles.containerProjectName}>{projectGroup.projectName}</Text>
+                        <Text style={styles.containerProjectMeta}>
+                          {projectGroup.containers.length} containers grouped on {serverGroup.serverName}
+                        </Text>
+                      </View>
+                      <Text style={styles.containerProjectProblems}>
+                        {projectProblems > 0
+                          ? `${projectProblems} problem${projectProblems === 1 ? '' : 's'}`
+                          : 'All running'}
+                      </Text>
+                    </View>
+
+                    {projectGroup.containers.map((container) => (
+                      <View key={container.id} style={styles.containerRow}>
+                        <View style={styles.containerIdentity}>
+                          <View
+                            style={[
+                              styles.containerGlyph,
+                              {
+                                backgroundColor: containerStateStyles[container.state].backgroundColor,
+                                borderColor: containerStateStyles[container.state].borderColor
+                              }
+                            ]}
+                          >
+                            <Boxes
+                              color={containerStateStyles[container.state].color}
+                              size={15}
+                              strokeWidth={2}
+                            />
+                          </View>
+                          <View style={styles.containerCopy}>
+                            <Text style={styles.containerName}>{container.name}</Text>
+                            <Text style={styles.containerDetail}>{container.detail}</Text>
+                          </View>
+                        </View>
+                        <ContainerStatePill state={container.state} />
+                        <Text style={styles.containerRestartCount}>{container.restarts} restarts</Text>
+                      </View>
+                    ))}
+                  </View>
+                );
+              })}
+            </View>
+          );
+        })}
+      </View>
+    </Section>
+  );
+}
+
+function TimelineRow({ event }: { event: TimelineEvent }) {
+  return (
+    <View style={styles.timelineRow}>
+      <Text style={styles.timelineTime}>{event.time}</Text>
+      <TimelineKindPill kind={event.kind} />
+      <View style={[styles.timelineStatus, { borderColor: statusStyles[event.status].color }]}>
+        {event.status === 'healthy' ? (
+          <CircleCheckBig color={statusStyles[event.status].color} size={12} strokeWidth={2} />
+        ) : event.status === 'warning' ? (
+          <CircleAlert color={statusStyles[event.status].color} size={12} strokeWidth={2} />
+        ) : (
+          <CircleX color={statusStyles[event.status].color} size={12} strokeWidth={2} />
+        )}
+      </View>
+      <Text style={styles.timelineProject}>
+        {event.projectName}
+        {event.serverName ? ` / ${event.serverName}` : ''}
+        {' / '}
+        {event.target}
+      </Text>
+      <Text style={styles.timelineMessage}>{event.message}</Text>
+      <StatusPill status={event.status} />
     </View>
   );
 }
@@ -171,26 +413,12 @@ export function Dashboard() {
         </Section>
       </View>
 
+      <ContainerMonitoringSection />
+
       <Section title="Recent timeline">
         <View style={styles.timelineList}>
           {timelineEvents.map((event) => (
-            <View key={event.id} style={styles.timelineRow}>
-              <Text style={styles.timelineTime}>{event.time}</Text>
-              <View style={[styles.timelineStatus, { borderColor: statusStyles[event.status].color }]}>
-                {event.status === 'healthy' ? (
-                  <CircleCheckBig color={statusStyles[event.status].color} size={12} strokeWidth={2} />
-                ) : event.status === 'warning' ? (
-                  <CircleAlert color={statusStyles[event.status].color} size={12} strokeWidth={2} />
-                ) : (
-                  <CircleX color={statusStyles[event.status].color} size={12} strokeWidth={2} />
-                )}
-              </View>
-              <Text style={styles.timelineProject}>
-                {event.projectName} / {event.target}
-              </Text>
-              <Text style={styles.timelineMessage}>{event.message}</Text>
-              <StatusPill status={event.status} />
-            </View>
+            <TimelineRow key={event.id} event={event} />
           ))}
         </View>
         <View style={styles.timelineFooter}>
@@ -472,6 +700,172 @@ const styles = StyleSheet.create({
     minHeight: 48,
     paddingInline: 18
   },
+  containerSummaryRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    padding: 18
+  },
+  containerSummaryChip: {
+    backgroundColor: '#0A151F',
+    borderColor: colors.borderSoft,
+    borderRadius: 6,
+    borderWidth: 1,
+    minWidth: 104,
+    paddingBlock: 12,
+    paddingInline: 14
+  },
+  containerSummaryValue: {
+    color: colors.text,
+    fontFamily: monoStack,
+    fontSize: 24,
+    fontWeight: '900',
+    lineHeight: 28
+  },
+  containerSummaryLabel: {
+    color: colors.muted,
+    fontFamily: monoStack,
+    fontSize: 11,
+    marginTop: 4,
+    textTransform: 'uppercase'
+  },
+  containerGroupList: {
+    gap: 12,
+    paddingHorizontal: 18,
+    paddingBottom: 18
+  },
+  containerServerCard: {
+    backgroundColor: '#09141D',
+    borderColor: colors.borderSoft,
+    borderRadius: 6,
+    borderWidth: 1,
+    overflow: 'hidden'
+  },
+  containerServerHeader: {
+    alignItems: 'flex-start',
+    borderBottomColor: colors.divider,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'space-between',
+    paddingBlock: 14,
+    paddingInline: 16
+  },
+  containerServerName: {
+    color: colors.text,
+    fontFamily: monoStack,
+    fontSize: 14,
+    fontWeight: '900',
+    lineHeight: 18
+  },
+  containerServerMeta: {
+    color: colors.muted,
+    fontFamily: monoStack,
+    fontSize: 12,
+    marginTop: 3
+  },
+  containerServerCounts: {
+    alignItems: 'flex-end',
+    gap: 4
+  },
+  containerServerCountLabel: {
+    color: colors.muted,
+    fontFamily: monoStack,
+    fontSize: 12
+  },
+  containerProjectBlock: {
+    borderBottomColor: colors.divider,
+    borderBottomWidth: 1
+  },
+  containerProjectHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'space-between',
+    paddingBlock: 12,
+    paddingInline: 16
+  },
+  containerProjectName: {
+    color: colors.accent,
+    fontFamily: monoStack,
+    fontSize: 13,
+    fontWeight: '900',
+    lineHeight: 17
+  },
+  containerProjectMeta: {
+    color: colors.muted,
+    fontFamily: monoStack,
+    fontSize: 11,
+    marginTop: 3
+  },
+  containerProjectProblems: {
+    color: colors.warning,
+    fontFamily: monoStack,
+    fontSize: 12,
+    fontWeight: '900',
+    textAlign: 'right'
+  },
+  containerRow: {
+    alignItems: 'center',
+    borderTopColor: colors.divider,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    minHeight: 56,
+    paddingBlock: 10,
+    paddingInline: 16
+  },
+  containerIdentity: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: 12,
+    minWidth: 220
+  },
+  containerGlyph: {
+    alignItems: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 30,
+    justifyContent: 'center',
+    width: 30
+  },
+  containerCopy: {
+    gap: 3
+  },
+  containerName: {
+    color: colors.text,
+    fontFamily: monoStack,
+    fontSize: 13,
+    fontWeight: '900',
+    lineHeight: 17
+  },
+  containerDetail: {
+    color: colors.muted,
+    fontFamily: monoStack,
+    fontSize: 11,
+    lineHeight: 15
+  },
+  containerStatePill: {
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    minWidth: 92,
+    paddingBlock: 5,
+    paddingInline: 10
+  },
+  containerStateText: {
+    fontFamily: monoStack,
+    fontSize: 12,
+    fontWeight: '900'
+  },
+  containerRestartCount: {
+    color: colors.muted,
+    fontFamily: monoStack,
+    fontSize: 12,
+    minWidth: 92,
+    textAlign: 'right'
+  },
   timelineList: {
     paddingTop: 0
   },
@@ -490,6 +884,20 @@ const styles = StyleSheet.create({
     fontFamily: monoStack,
     fontSize: 12,
     minWidth: 178
+  },
+  timelineKindPill: {
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    minWidth: 84,
+    paddingBlock: 5,
+    paddingInline: 10
+  },
+  timelineKindText: {
+    fontFamily: monoStack,
+    fontSize: 11,
+    fontWeight: '900',
+    textTransform: 'uppercase'
   },
   timelineStatus: {
     alignItems: 'center',
