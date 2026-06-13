@@ -19,8 +19,27 @@ describe('App', () => {
     expect(screen.getByText('Last sweep 42s ago')).toBeInTheDocument();
     expect(screen.getByText('Projects needing attention')).toBeInTheDocument();
     expect(screen.getByText('Active alerts')).toBeInTheDocument();
+    expect(screen.getByText('Container monitoring')).toBeInTheDocument();
     expect(screen.getByText('Recent timeline')).toBeInTheDocument();
     expect(screen.getAllByText('media-stack / jellyfin')).toHaveLength(2);
+  });
+
+  it('groups container inventory by server and project', () => {
+    render(<App />);
+
+    expect(screen.getByText('Grouped by server')).toBeInTheDocument();
+    expect(screen.getByText('atlas')).toBeInTheDocument();
+    expect(screen.getByText('omega')).toBeInTheDocument();
+    expect(screen.getByText('alertmanager')).toBeInTheDocument();
+    expect(screen.getByText('Missing')).toBeInTheDocument();
+  });
+
+  it('surfaces container events in the operational timeline', () => {
+    render(<App />);
+
+    expect(screen.getAllByText('Container')).toHaveLength(3);
+    expect(screen.getByText('media-stack / atlas / sonarr')).toBeInTheDocument();
+    expect(screen.getByText('monitoring / omega / alertmanager')).toBeInTheDocument();
   });
 
   it('uses the mono stack for the dashboard chrome', () => {

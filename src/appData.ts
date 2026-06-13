@@ -17,6 +17,29 @@ export type Project = {
   unhealthy: number;
 };
 
+export type ContainerState = 'running' | 'restarting' | 'unhealthy' | 'missing';
+
+export type ContainerRecord = {
+  id: string;
+  name: string;
+  projectName: string;
+  serverName: string;
+  state: ContainerState;
+  restarts: number;
+  detail: string;
+};
+
+export type ProjectContainerGroup = {
+  projectName: string;
+  containers: ContainerRecord[];
+};
+
+export type ServerContainerGroup = {
+  serverName: string;
+  containers: ContainerRecord[];
+  projects: ProjectContainerGroup[];
+};
+
 export type Alert = {
   id: string;
   projectName: string;
@@ -33,6 +56,8 @@ export type TimelineEvent = {
   status: HealthState;
   message: string;
   time: string;
+  kind: 'service' | 'container';
+  serverName?: string;
 };
 
 export const navigationItems = [
@@ -118,6 +143,81 @@ export const projects: Project[] = [
   }
 ];
 
+export const containers: ContainerRecord[] = [
+  {
+    id: 'jellyfin',
+    name: 'jellyfin',
+    projectName: 'media-stack',
+    serverName: 'atlas',
+    state: 'running',
+    restarts: 1,
+    detail: 'Healthy after media library rescan'
+  },
+  {
+    id: 'sonarr',
+    name: 'sonarr',
+    projectName: 'media-stack',
+    serverName: 'atlas',
+    state: 'restarting',
+    restarts: 6,
+    detail: 'CrashLoopBackOff during database migration'
+  },
+  {
+    id: 'radarr',
+    name: 'radarr',
+    projectName: 'media-stack',
+    serverName: 'atlas',
+    state: 'running',
+    restarts: 0,
+    detail: 'Running normally'
+  },
+  {
+    id: 'caddy',
+    name: 'caddy',
+    projectName: 'infrastructure',
+    serverName: 'atlas',
+    state: 'running',
+    restarts: 0,
+    detail: 'Serving reverse proxy traffic'
+  },
+  {
+    id: 'prometheus',
+    name: 'prometheus',
+    projectName: 'monitoring',
+    serverName: 'omega',
+    state: 'running',
+    restarts: 0,
+    detail: 'Scrape targets healthy'
+  },
+  {
+    id: 'alertmanager',
+    name: 'alertmanager',
+    projectName: 'monitoring',
+    serverName: 'omega',
+    state: 'missing',
+    restarts: 0,
+    detail: 'Expected container absent from compose'
+  },
+  {
+    id: 'restic',
+    name: 'restic',
+    projectName: 'backup',
+    serverName: 'omega',
+    state: 'unhealthy',
+    restarts: 3,
+    detail: 'Backup job exit code 1 on last run'
+  },
+  {
+    id: 'portainer',
+    name: 'portainer',
+    projectName: 'infrastructure',
+    serverName: 'omega',
+    state: 'running',
+    restarts: 2,
+    detail: 'Stable after redeploy'
+  }
+];
+
 export const alerts: Alert[] = [
   {
     id: 'jellyfin',
@@ -161,6 +261,44 @@ export const alerts: Alert[] = [
   }
 ];
 
+export function groupContainersByServerAndProject(
+  items: ContainerRecord[]
+): ServerContainerGroup[] {
+  const serverMap = new Map<
+    string,
+    { containers: ContainerRecord[]; projectMap: Map<string, ContainerRecord[]> }
+  >();
+
+  for (const container of items) {
+    const existingServer = serverMap.get(container.serverName);
+
+    if (existingServer) {
+      existingServer.containers.push(container);
+      const existingProject = existingServer.projectMap.get(container.projectName);
+      if (existingProject) {
+        existingProject.push(container);
+      } else {
+        existingServer.projectMap.set(container.projectName, [container]);
+      }
+      continue;
+    }
+
+    serverMap.set(container.serverName, {
+      containers: [container],
+      projectMap: new Map([[container.projectName, [container]]])
+    });
+  }
+
+  return Array.from(serverMap.entries()).map(([serverName, group]) => ({
+    serverName,
+    containers: group.containers,
+    projects: Array.from(group.projectMap.entries()).map(([projectName, projectContainers]) => ({
+      projectName,
+      containers: projectContainers
+    }))
+  }));
+}
+
 export const timelineEvents: TimelineEvent[] = [
   {
     id: 'timeline-jellyfin',
@@ -168,7 +306,8 @@ export const timelineEvents: TimelineEvent[] = [
     target: 'jellyfin',
     status: 'critical',
     message: 'Service is down',
-    time: '2025-05-24 22:14:18'
+    time: '2025-05-24 22:14:18',
+    kind: 'service'
   },
   {
     id: 'timeline-node',
@@ -176,7 +315,8 @@ export const timelineEvents: TimelineEvent[] = [
     target: 'node-02',
     status: 'warning',
     message: 'High CPU usage (87%)',
-    time: '2025-05-24 22:11:07'
+    time: '2025-05-24 22:11:07',
+    kind: 'service'
   },
   {
     id: 'timeline-restic',
@@ -184,7 +324,8 @@ export const timelineEvents: TimelineEvent[] = [
     target: 'restic',
     status: 'warning',
     message: 'Backup job missed',
-    time: '2025-05-24 22:09:32'
+    time: '2025-05-24 22:09:32',
+    kind: 'service'
   },
   {
     id: 'timeline-router',
@@ -192,7 +333,8 @@ export const timelineEvents: TimelineEvent[] = [
     target: 'router',
     status: 'healthy',
     message: 'Interface reconnected',
-    time: '2025-05-24 22:07:54'
+    time: '2025-05-24 22:07:54',
+    kind: 'service'
   },
   {
     id: 'timeline-prometheus',
@@ -200,6 +342,37 @@ export const timelineEvents: TimelineEvent[] = [
     target: 'prometheus',
     status: 'healthy',
     message: 'Targets healthy',
-    time: '2025-05-24 22:06:41'
+    time: '2025-05-24 22:06:41',
+    kind: 'service'
+  },
+  {
+    id: 'timeline-sonarr',
+    projectName: 'media-stack',
+    target: 'sonarr',
+    serverName: 'atlas',
+    status: 'critical',
+    message: 'Container restarted 6 times in 10 minutes',
+    time: '2025-05-24 22:05:03',
+    kind: 'container'
+  },
+  {
+    id: 'timeline-alertmanager',
+    projectName: 'monitoring',
+    target: 'alertmanager',
+    serverName: 'omega',
+    status: 'critical',
+    message: 'Expected container missing from compose',
+    time: '2025-05-24 22:03:19',
+    kind: 'container'
+  },
+  {
+    id: 'timeline-restic-container',
+    projectName: 'backup',
+    target: 'restic',
+    serverName: 'omega',
+    status: 'warning',
+    message: 'Container reported unhealthy after backup failure',
+    time: '2025-05-24 22:01:48',
+    kind: 'container'
   }
 ];
